@@ -18,10 +18,12 @@ public class GamePanel extends JPanel implements Runnable{
     Paddle p2;
     Ball ball;
     Score score;
+    PowerUp powerUp;
 
     public GamePanel(){
         newPaddles();
         newBall();
+        newPowerUp();
         score = new Score(GAME_WIDTH, GAME_HEIGHT);
         this.setFocusable(true);
         this.addKeyListener(new ActionListener());
@@ -38,6 +40,9 @@ public class GamePanel extends JPanel implements Runnable{
         p1 = new Paddle(0, (GAME_HEIGHT/2) - (PADDLE_HEIGHT/2), PADDLE_WIDTH, PADDLE_HEIGHT, 1);
         p2 = new Paddle(GAME_WIDTH - PADDLE_WIDTH, (GAME_HEIGHT/2) - (PADDLE_HEIGHT/2), PADDLE_WIDTH, PADDLE_HEIGHT, 2);
     }
+    public void newPowerUp(){
+        powerUp = new PowerUp(random.nextInt(GAME_WIDTH/2 - 200 - BALL_DIAMETER, GAME_WIDTH/2 + 200 - BALL_DIAMETER), random.nextInt(GAME_HEIGHT/2 - 300 - BALL_DIAMETER ,GAME_HEIGHT/2 + 300 - BALL_DIAMETER), BALL_DIAMETER, BALL_DIAMETER, random.nextInt(3));
+    }
     public void paint(Graphics g){
         image = createImage(getWidth(), getHeight());
         graphics = image.getGraphics();
@@ -49,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable{
         p2.draw(g);
         ball.draw(g);
         score.draw(g);
+        powerUp.draw(g);
     }
     public void move(){
         p1.move();
@@ -90,6 +96,15 @@ public class GamePanel extends JPanel implements Runnable{
             ball.setYDirection(ball.yVelocity);
         }
 
+        //check collision with power ups
+        if(powerUp.intersects(ball)){//check to see if ball intersects power up
+            if(ball.xVelocity > 0){
+                givePowerUp(1);
+            }
+            else{
+                givePowerUp(2);
+            }
+        }
         //stops paddles at window edges
         if(p1.y <= 0){
             p1.y = 0;
@@ -106,14 +121,34 @@ public class GamePanel extends JPanel implements Runnable{
         //gives player a point and resets board
         if(ball.x <= 0){
             score.p2++;
-            newPaddles();
-            newBall();
+            resetBoard();
         }
         if(ball.x >= GAME_WIDTH - BALL_DIAMETER){
             score.p1++;
-            newPaddles();
-            newBall();
+            resetBoard();
         }
+    }
+    //TODO: Finish givePowerUp Method and its cases (slow mo, random trajectory, and long paddle)
+    public void givePowerUp(int paddleId){
+        if(paddleId == 1){
+            switch(powerUp.id){
+                case 0://longer paddle power up
+                    p1.lengthenPaddle();
+                    break;
+                case 1://slow mo ball power up
+                    break;
+                case 2:// random trajectory power up
+                    break;
+            }
+        }
+        else{
+            //p2 version
+        }
+    }
+    public void resetBoard(){
+        newPaddles();
+        newBall();
+        newPowerUp();
     }
     public void run(){
         //game loop

@@ -1,12 +1,14 @@
 package org.example;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Paddle extends Rectangle{
     private int id;
     private int yVelocity;
     private int speed = 10;
+    private boolean isLenghtened = false;
     public Paddle(int xPos, int yPos, int PADDLE_WIDTH, int PADDLE_HEIGHT, int id){
         super(xPos,yPos,PADDLE_WIDTH, PADDLE_HEIGHT);
         this.id = id;
@@ -72,6 +74,24 @@ public class Paddle extends Rectangle{
         else{
             g.setColor(Color.pink);
         }
-        g.fillRect(x,y, width, height);
+        if(isLenghtened){
+            this.height += 150;
+            g.fillRect(x,y, width, height);
+        }
+        else {
+            g.fillRect(x, y, width, height);
+        }
+    }
+    public void lengthenPaddle(){
+        isLenghtened = true;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                isLenghtened = false;
+            }
+        };
+        int delay = 10000;
+        Timer timer = new Timer("Timer");
+        timer.schedule(task, delay);
     }
 }

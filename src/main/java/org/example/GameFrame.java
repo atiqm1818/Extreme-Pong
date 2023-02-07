@@ -1,8 +1,6 @@
 package org.example;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.random.RandomGenerator;
+
 import javax.swing.*;
 public class GameFrame extends JFrame{
     private GamePanel panel;

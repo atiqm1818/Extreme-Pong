@@ -1,8 +1,6 @@
 package org.example;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+
 public class Score extends Rectangle{
     private static int GAME_WIDTH;
     private static int GAME_HEIGHT;
