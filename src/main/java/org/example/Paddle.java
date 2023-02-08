@@ -74,8 +74,9 @@ public class Paddle extends Rectangle{
         else{
             g.setColor(Color.pink);
         }
+        System.out.println(isLenghtened);
         if(isLenghtened){
-            this.height += 150;
+            this.height += 10;
             g.fillRect(x,y, width, height);
         }
         else {

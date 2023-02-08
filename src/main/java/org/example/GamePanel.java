@@ -41,7 +41,7 @@ public class GamePanel extends JPanel implements Runnable{
         p2 = new Paddle(GAME_WIDTH - PADDLE_WIDTH, (GAME_HEIGHT/2) - (PADDLE_HEIGHT/2), PADDLE_WIDTH, PADDLE_HEIGHT, 2);
     }
     public void newPowerUp(){
-        powerUp = new PowerUp(random.nextInt(GAME_WIDTH/2 - 200 - BALL_DIAMETER, GAME_WIDTH/2 + 200 - BALL_DIAMETER), random.nextInt(GAME_HEIGHT/2 - 300 - BALL_DIAMETER ,GAME_HEIGHT/2 + 300 - BALL_DIAMETER), BALL_DIAMETER, BALL_DIAMETER, random.nextInt(3));
+        powerUp = new PowerUp(random.nextInt(GAME_WIDTH/2 - 200 - BALL_DIAMETER, GAME_WIDTH/2 + 200 - BALL_DIAMETER), random.nextInt(GAME_HEIGHT/2 - 300 - BALL_DIAMETER ,GAME_HEIGHT/2 + 300 - BALL_DIAMETER), BALL_DIAMETER+25, BALL_DIAMETER+25, 0);//random.nextInt(3)
     }
     public void paint(Graphics g){
         image = createImage(getWidth(), getHeight());
@@ -97,7 +97,7 @@ public class GamePanel extends JPanel implements Runnable{
         }
 
         //check collision with power ups
-        if(powerUp.intersects(ball)){//check to see if ball intersects power up
+        if(ball.intersects(powerUp)){//check to see if ball intersects power up
             if(ball.xVelocity > 0){
                 givePowerUp(1);
             }
@@ -130,20 +130,30 @@ public class GamePanel extends JPanel implements Runnable{
     }
     //TODO: Finish givePowerUp Method and its cases (slow mo, random trajectory, and long paddle)
     public void givePowerUp(int paddleId){
-        if(paddleId == 1){
             switch(powerUp.id){
                 case 0://longer paddle power up
-                    p1.lengthenPaddle();
+                    if(paddleId == 1){
+                        p1.lengthenPaddle();
+                    }
+                    else{
+                        p2.lengthenPaddle();
+                    }
                     break;
                 case 1://slow mo ball power up
+                    slowMotionBall();
                     break;
                 case 2:// random trajectory power up
+                    randomTrajectoryBall();
                     break;
             }
-        }
-        else{
-            //p2 version
-        }
+
+    }
+    //power up methods
+    public void slowMotionBall(){
+
+    }
+    public void randomTrajectoryBall(){
+
     }
     public void resetBoard(){
         newPaddles();
