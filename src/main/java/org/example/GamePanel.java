@@ -20,6 +20,7 @@ public class GamePanel extends JPanel implements Runnable{
     Score score;
     PowerUp powerUp;
 
+
     public GamePanel(){
         newPaddles();
         newBall();
@@ -104,6 +105,7 @@ public class GamePanel extends JPanel implements Runnable{
             else{
                 givePowerUp(2);
             }
+
         }
         //stops paddles at window edges
         if(p1.y <= 0){
@@ -128,15 +130,15 @@ public class GamePanel extends JPanel implements Runnable{
             resetBoard();
         }
     }
-    //TODO: Finish givePowerUp Method and its cases (slow mo, random trajectory, and long paddle)
     public void givePowerUp(int paddleId){
             switch(powerUp.id){
                 case 0://longer paddle power up
                     if(paddleId == 1){
-                        p1.lengthenPaddle();
+                        p1.height += 20;
+
                     }
                     else{
-                        p2.lengthenPaddle();
+                        p2.height += 20;
                     }
                     break;
                 case 1://slow mo ball power up

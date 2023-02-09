@@ -5,10 +5,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Paddle extends Rectangle{
-    private int id;
-    private int yVelocity;
-    private int speed = 10;
-    private boolean isLenghtened = false;
+    int id;
+    int yVelocity;
+    int speed = 10;
+    boolean isLenghtened = false;
     public Paddle(int xPos, int yPos, int PADDLE_WIDTH, int PADDLE_HEIGHT, int id){
         super(xPos,yPos,PADDLE_WIDTH, PADDLE_HEIGHT);
         this.id = id;
@@ -74,14 +74,7 @@ public class Paddle extends Rectangle{
         else{
             g.setColor(Color.pink);
         }
-        System.out.println(isLenghtened);
-        if(isLenghtened){
-            this.height += 10;
-            g.fillRect(x,y, width, height);
-        }
-        else {
             g.fillRect(x, y, width, height);
-        }
     }
     public void lengthenPaddle(){
         isLenghtened = true;
@@ -91,7 +84,7 @@ public class Paddle extends Rectangle{
                 isLenghtened = false;
             }
         };
-        int delay = 10000;
+        long delay = 1000000;
         Timer timer = new Timer("Timer");
         timer.schedule(task, delay);
     }
