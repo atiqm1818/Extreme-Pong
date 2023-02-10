@@ -2,6 +2,7 @@ package org.example;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 public class GamePanel extends JPanel implements Runnable{
     private static final int GAME_WIDTH = 1000;
@@ -19,6 +20,7 @@ public class GamePanel extends JPanel implements Runnable{
     Ball ball;
     Score score;
     PowerUp powerUp;
+    List<PowerUp> dissapearables = new ArrayList<>();
 
 
     public GamePanel(){
@@ -42,7 +44,9 @@ public class GamePanel extends JPanel implements Runnable{
         p2 = new Paddle(GAME_WIDTH - PADDLE_WIDTH, (GAME_HEIGHT/2) - (PADDLE_HEIGHT/2), PADDLE_WIDTH, PADDLE_HEIGHT, 2);
     }
     public void newPowerUp(){
+        dissapearables.clear();
         powerUp = new PowerUp(random.nextInt(GAME_WIDTH/2 - 200 - BALL_DIAMETER, GAME_WIDTH/2 + 200 - BALL_DIAMETER), random.nextInt(GAME_HEIGHT/2 - 300 - BALL_DIAMETER ,GAME_HEIGHT/2 + 300 - BALL_DIAMETER), BALL_DIAMETER+25, BALL_DIAMETER+25, 0);//random.nextInt(3)
+        dissapearables.add(powerUp);
     }
     public void paint(Graphics g){
         image = createImage(getWidth(), getHeight());
@@ -55,7 +59,9 @@ public class GamePanel extends JPanel implements Runnable{
         p2.draw(g);
         ball.draw(g);
         score.draw(g);
-        powerUp.draw(g);
+        if(!dissapearables.isEmpty()){
+            dissapearables.get(0).draw(g);
+        }
     }
     public void move(){
         p1.move();
@@ -101,9 +107,11 @@ public class GamePanel extends JPanel implements Runnable{
         if(ball.intersects(powerUp)){//check to see if ball intersects power up
             if(ball.xVelocity > 0){
                 givePowerUp(1);
+                dissapearables.remove(0);
             }
             else{
                 givePowerUp(2);
+                dissapearables.remove(0);
             }
 
         }
