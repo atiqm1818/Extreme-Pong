@@ -76,16 +76,4 @@ public class Paddle extends Rectangle{
         }
             g.fillRect(x, y, width, height);
     }
-    public void lengthenPaddle(){
-        isLenghtened = true;
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                isLenghtened = false;
-            }
-        };
-        long delay = 1000000;
-        Timer timer = new Timer("Timer");
-        timer.schedule(task, delay);
-    }
 }

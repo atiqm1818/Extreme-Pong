@@ -20,9 +20,6 @@ public class GamePanel extends JPanel implements Runnable{
     Ball ball;
     Score score;
     PowerUp powerUp;
-    List<PowerUp> dissapearables = new ArrayList<>();
-
-
     public GamePanel(){
         newPaddles();
         newBall();
@@ -44,9 +41,7 @@ public class GamePanel extends JPanel implements Runnable{
         p2 = new Paddle(GAME_WIDTH - PADDLE_WIDTH, (GAME_HEIGHT/2) - (PADDLE_HEIGHT/2), PADDLE_WIDTH, PADDLE_HEIGHT, 2);
     }
     public void newPowerUp(){
-        dissapearables.clear();
-        powerUp = new PowerUp(random.nextInt(GAME_WIDTH/2 - 200 - BALL_DIAMETER, GAME_WIDTH/2 + 200 - BALL_DIAMETER), random.nextInt(GAME_HEIGHT/2 - 300 - BALL_DIAMETER ,GAME_HEIGHT/2 + 300 - BALL_DIAMETER), BALL_DIAMETER+25, BALL_DIAMETER+25, 0);//random.nextInt(3)
-        dissapearables.add(powerUp);
+        powerUp = new PowerUp(random.nextInt(GAME_WIDTH/2 - 200 - BALL_DIAMETER, GAME_WIDTH/2 + 200 - BALL_DIAMETER), random.nextInt(GAME_HEIGHT/2 - 300 - BALL_DIAMETER ,GAME_HEIGHT/2), BALL_DIAMETER+25, BALL_DIAMETER+25, random.nextInt(3));
     }
     public void paint(Graphics g){
         image = createImage(getWidth(), getHeight());
@@ -59,9 +54,7 @@ public class GamePanel extends JPanel implements Runnable{
         p2.draw(g);
         ball.draw(g);
         score.draw(g);
-        if(!dissapearables.isEmpty()){
-            dissapearables.get(0).draw(g);
-        }
+        powerUp.draw(g);
     }
     public void move(){
         p1.move();
@@ -107,12 +100,12 @@ public class GamePanel extends JPanel implements Runnable{
         if(ball.intersects(powerUp)){//check to see if ball intersects power up
             if(ball.xVelocity > 0){
                 givePowerUp(1);
-                dissapearables.remove(0);
             }
             else{
                 givePowerUp(2);
-                dissapearables.remove(0);
             }
+            powerUp.x = GAME_WIDTH + 500;
+            newPowerUp();
 
         }
         //stops paddles at window edges
@@ -140,16 +133,10 @@ public class GamePanel extends JPanel implements Runnable{
     }
     public void givePowerUp(int paddleId){
             switch(powerUp.id){
-                case 0://longer paddle power up
-                    if(paddleId == 1){
-                        p1.height += 20;
-
-                    }
-                    else{
-                        p2.height += 20;
-                    }
+                case 0:
+                    lengthenPaddle(paddleId);
                     break;
-                case 1://slow mo ball power up
+                case 1://slow motion ball power up
                     slowMotionBall();
                     break;
                 case 2:// random trajectory power up
@@ -159,12 +146,32 @@ public class GamePanel extends JPanel implements Runnable{
 
     }
     //power up methods
+    public void lengthenPaddle(int paddleId){
+        //longer paddle power up
+        if(paddleId == 1){
+            p1.height += 100;
+        }
+        else{
+            p2.height += 100;
+        }
+    }
+    //can improve later so that ball is only slowed for a certain period of time before speeding up again
     public void slowMotionBall(){
-
+        ball.xVelocity = ball.xVelocity/2;
+        ball.yVelocity = ball.yVelocity/2;
     }
     public void randomTrajectoryBall(){
-
+        int rand = random.nextInt(2);
+        switch(rand){
+            case 0:
+                ball.yVelocity = -ball.yVelocity;
+                break;
+            case 1:
+                ball.xVelocity = -ball.xVelocity;
+                break;
+        }
     }
+    //methods for running game / game loop
     public void resetBoard(){
         newPaddles();
         newBall();
@@ -188,6 +195,7 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
     }
+    //key input methods
     public class ActionListener extends KeyAdapter{
         public void keyPressed(KeyEvent e){
             p1.keyPressed(e);
