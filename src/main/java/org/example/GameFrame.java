@@ -5,6 +5,7 @@ import javax.swing.*;
 public class GameFrame extends JFrame{
     private GamePanel panel;
     public GameFrame(){
+        //creating and customizing game panel and game frame
         panel = new GamePanel();
         this.add(panel);
         this.setTitle("Pong Game");

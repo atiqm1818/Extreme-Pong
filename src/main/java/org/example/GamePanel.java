@@ -2,7 +2,6 @@ package org.example;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.List;
 import javax.swing.*;
 public class GamePanel extends JPanel implements Runnable{
     private static final int GAME_WIDTH = 1000;
@@ -11,7 +10,9 @@ public class GamePanel extends JPanel implements Runnable{
     private static final int BALL_DIAMETER = 20;
     private static final int PADDLE_WIDTH = 25;
     private static final int PADDLE_HEIGHT = 100;
+    //game loop thread
     Thread gameThread;
+    //game items
     Image image;
     Graphics graphics;
     Random random;
@@ -21,10 +22,12 @@ public class GamePanel extends JPanel implements Runnable{
     Score score;
     PowerUp powerUp;
     public GamePanel(){
+        //creating new objects on game start
         newPaddles();
         newBall();
         newPowerUp();
         score = new Score(GAME_WIDTH, GAME_HEIGHT);
+        //adjusting window settings (resolution, focus, event listeners)
         this.setFocusable(true);
         this.addKeyListener(new ActionListener());
         this.setPreferredSize(SCREEN_SIZE);
@@ -32,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable{
         gameThread = new Thread(this);
         gameThread.start();
     }
+    //Game item creation methods----------------------------------------------------------------------------------------
     public void newBall(){
         random = new Random();
         ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2), (GAME_HEIGHT / 2) - (BALL_DIAMETER / 2), BALL_DIAMETER, BALL_DIAMETER);
@@ -43,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void newPowerUp(){
         powerUp = new PowerUp(random.nextInt(GAME_WIDTH/2 - 200 - BALL_DIAMETER, GAME_WIDTH/2 + 200 - BALL_DIAMETER), random.nextInt(GAME_HEIGHT/2 - 300 - BALL_DIAMETER ,GAME_HEIGHT/2), BALL_DIAMETER+25, BALL_DIAMETER+25, random.nextInt(3));
     }
+    //Game layout methods-----------------------------------------------------------------------------------------------
     public void paint(Graphics g){
         image = createImage(getWidth(), getHeight());
         graphics = image.getGraphics();
@@ -56,6 +61,7 @@ public class GamePanel extends JPanel implements Runnable{
         score.draw(g);
         powerUp.draw(g);
     }
+    //Game interaction methods------------------------------------------------------------------------------------------
     public void move(){
         p1.move();
         p2.move();
@@ -132,20 +138,16 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
     public void givePowerUp(int paddleId){
-            switch(powerUp.id){
-                case 0:
-                    lengthenPaddle(paddleId);
-                    break;
-                case 1://slow motion ball power up
+        switch (powerUp.id) {
+            case 0 -> lengthenPaddle(paddleId);
+            case 1 ->//slow motion ball power up
                     slowMotionBall();
-                    break;
-                case 2:// random trajectory power up
+            case 2 ->// random trajectory power up
                     randomTrajectoryBall();
-                    break;
-            }
+        }
 
     }
-    //power up methods
+    //Power up methods--------------------------------------------------------------------------------------------------
     public void lengthenPaddle(int paddleId){
         //longer paddle power up
         if(paddleId == 1){
@@ -155,30 +157,24 @@ public class GamePanel extends JPanel implements Runnable{
             p2.height += 100;
         }
     }
-    //can improve later so that ball is only slowed for a certain period of time before speeding up again
     public void slowMotionBall(){
         ball.xVelocity = ball.xVelocity/2;
         ball.yVelocity = ball.yVelocity/2;
     }
     public void randomTrajectoryBall(){
         int rand = random.nextInt(2);
-        switch(rand){
-            case 0:
-                ball.yVelocity = -ball.yVelocity;
-                break;
-            case 1:
-                ball.xVelocity = -ball.xVelocity;
-                break;
+        switch (rand) {
+            case 0 -> ball.yVelocity = -ball.yVelocity;
+            case 1 -> ball.xVelocity = -ball.xVelocity;
         }
     }
-    //methods for running game / game loop
     public void resetBoard(){
         newPaddles();
         newBall();
         newPowerUp();
     }
+    //GAME LOOP---------------------------------------------------------------------------------------------------------
     public void run(){
-        //game loop
         long lastTime = System.nanoTime();
         double amountOfTics = 60;
         double ns = 1000000000 / amountOfTics;
@@ -195,7 +191,7 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
     }
-    //key input methods
+    //key input methods-------------------------------------------------------------------------------------------------
     public class ActionListener extends KeyAdapter{
         public void keyPressed(KeyEvent e){
             p1.keyPressed(e);
