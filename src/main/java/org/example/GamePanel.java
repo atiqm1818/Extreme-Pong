@@ -105,10 +105,10 @@ public class GamePanel extends JPanel implements Runnable{
         //check collision with power ups
         if(ball.intersects(powerUp)){//check to see if ball intersects power up
             if(ball.xVelocity > 0){
-                givePowerUp(1);
+                givePowerUp(p1);
             }
             else{
-                givePowerUp(2);
+                givePowerUp(p2);
             }
             powerUp.x = GAME_WIDTH + 500;
             newPowerUp();
@@ -137,31 +137,25 @@ public class GamePanel extends JPanel implements Runnable{
             resetBoard();
         }
     }
-    public void givePowerUp(int paddleId){
+    public void givePowerUp(Paddle paddle){
         switch (powerUp.id) {
-            case 0 -> lengthenPaddle(paddleId);
+            case 0 -> lengthenPaddle(paddle);
             case 1 ->//slow motion ball power up
-                    slowMotionBall();
+                    slowMotionBall(ball);
             case 2 ->// random trajectory power up
-                    randomTrajectoryBall();
+                    randomTrajectoryBall(ball);
         }
 
     }
     //Power up methods--------------------------------------------------------------------------------------------------
-    public void lengthenPaddle(int paddleId){
-        //longer paddle power up
-        if(paddleId == 1){
-            p1.height += 100;
-        }
-        else{
-            p2.height += 100;
-        }
+    public void lengthenPaddle(Paddle paddle){
+        paddle.height += 100;
     }
-    public void slowMotionBall(){
+    public void slowMotionBall(Ball ball){
         ball.xVelocity = ball.xVelocity/2;
         ball.yVelocity = ball.yVelocity/2;
     }
-    public void randomTrajectoryBall(){
+    public void randomTrajectoryBall(Ball ball){
         int rand = random.nextInt(2);
         switch (rand) {
             case 0 -> ball.yVelocity = -ball.yVelocity;
